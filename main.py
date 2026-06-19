@@ -1,6 +1,7 @@
 import psycopg
 import os
 from dotenv import load_dotenv
+from hospital_functions import *
 
 load_dotenv()
 
@@ -18,13 +19,14 @@ try:
     print("Connected to DB...")
 
 
-
 except psycopg.OperationalError as e:
     raise DatabaseConnectionError("Failed to connect... ") from e
 
-with conn.cursor() as cur:
-    cur.execute("SELECT version();")
-    print(cur.fetchone())
+hospital_id = 2
+
+hospital = get_hospital(conn, hospital_id)
 
 conn.close()
+
+print(hospital)
 
