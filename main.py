@@ -2,6 +2,7 @@ import psycopg
 import os
 from dotenv import load_dotenv
 from hospital_functions import *
+from card_print import *
 
 load_dotenv()
 
@@ -22,11 +23,18 @@ try:
 except psycopg.OperationalError as e:
     raise DatabaseConnectionError("Failed to connect... ") from e
 
-hospital_id = 2
+hospital_id = input("Which hospital ID?: ")
 
-hospital = get_hospital(conn, hospital_id)
+if hospital_id == "00":
+    hospitals = list_hospitals(conn)
+    for hospital in hospitals:
+        print(hospital)
+
+else:
+    hospital = get_hospital(conn, hospital_id)
+    print(hospital)
 
 conn.close()
 
-print(hospital)
+
 
