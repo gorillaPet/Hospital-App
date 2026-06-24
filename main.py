@@ -23,18 +23,31 @@ try:
 except psycopg.OperationalError as e:
     raise DatabaseConnectionError("Failed to connect... ") from e
 
-hospital_id = input("Which hospital ID?: ")
+quit_app = False
 
-if hospital_id == "00":
-    hospitals = list_hospitals(conn)
-    for hospital in hospitals:
-        print(hospital)
+#Main loop
+while not quit_app:
 
-else:
-    hospital = get_hospital(conn, hospital_id)
-    print(hospital)
+    for i in range(25):
+        print("*", end="")
+        
+    print("\nWhich department ID?: ")
+    dept_id = input("Neuro: 1\n"  "Cardiac: 2\n" "Trauma: 3\n\nSelection: ")
+
+    if dept_id == "quit":
+        quit_app = True
+        break
+
+    elif dept_id == "00":
+        hospitals = list_hospitals(conn)
+        for hospital in hospitals:
+            print(hospital)
+
+    else:
+        hospitals = find_department(conn, dept_id)
+        for hospital in hospitals:
+            print(hospital)
 
 conn.close()
-
 
 
