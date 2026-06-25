@@ -28,11 +28,16 @@ quit_app = False
 #Main loop
 while not quit_app:
 
-    for i in range(25):
-        print("*", end="")
-        
-    print("\nWhich department ID?: ")
-    dept_id = input("Neuro: 1\n"  "Cardiac: 2\n" "Trauma: 3\n\nSelection: ")
+    dept_id = input("""
+Departments 
+-----------
+                                       
+1: Neuro
+2: Trauma
+3: Cardiac
+                    
+Selection: """
+                    )
 
     if dept_id == "quit":
         quit_app = True
@@ -41,12 +46,31 @@ while not quit_app:
     elif dept_id == "00":
         hospitals = list_hospitals(conn)
         for hospital in hospitals:
-            print(hospital)
+            print_card(conn, dept_id, hospital)
 
     else:
         hospitals = find_department(conn, dept_id)
+        with conn.cursor() as cur:
+            cur.execute(
+                "SELECT * FROM department WHERE department_id = %s", (dept_id,)
+            )
+            dept = cur.fetchone()
+
+        ############################## Delete after GUI implementation OR keep for debug ################################
+        
+        
+        print(f"""
+              
+--------------------
+              {dept[1]}
+--------------------
+""")
+        
+
+
         for hospital in hospitals:
-            print(hospital)
+            print_card(conn, dept_id, hospital)
+            print("")
 
 conn.close()
 
